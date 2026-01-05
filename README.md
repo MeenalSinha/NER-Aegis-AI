@@ -137,6 +137,9 @@ Risk Score: 78 (High)
 - Hindi (हिंदी)
 - Khasi (Local tribal language)
 
+</td>
+</tr>
+</table>
 
 #### 5️⃣ Clear Scope Framing
 - 🛡️ Prominent safety boundaries on every page
