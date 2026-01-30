@@ -1,14 +1,10 @@
 # 🏔️ NER-Aegis AI
 ## Semi-autonomous Landslide Risk & Micro-Evacuation System
 
-<div align="center">
-
 **🎯 Competition Theme:** AI for Governance & Public Good  
 **🌍 Region:** Northeast India  
 **⏱️ Warning Time:** Hours-to-Days Early Warning  
 **👥 Target Users:** Disaster Management Authorities & Communities
-
-</div>
 
 ---
 
@@ -199,10 +195,6 @@ Risk Score: 78 (High)
 ---
 
 ### 🚀 HIGH-IMPACT ADD-ONS (All Implemented)
-
-<table>
-<tr>
-<td width="50%">
 
 #### 6️⃣ Time-Based Risk Trends
 - 📈 7-14 day historical trends
