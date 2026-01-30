@@ -1,0 +1,91 @@
+name: CI - Basic Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Validate Python syntax
+      run: |
+        python -m py_compile app.py
+        python -m py_compile logic/*.py
+        echo "✅ Python syntax valid"
+    
+    - name: Test logic module imports
+      run: |
+        python -c "from logic import risk_engine, evacuation_planner, alert_engine; print('✅ Logic modules import successfully')"
+    
+    - name: Verify required files exist
+      run: |
+        test -f README.md && echo "✅ README.md exists"
+        test -f LICENSE && echo "✅ LICENSE exists"
+        test -f requirements.txt && echo "✅ requirements.txt exists"
+        test -f app.py && echo "✅ app.py exists"
+    
+    - name: Verify logic module structure
+      run: |
+        test -f logic/__init__.py && echo "✅ logic/__init__.py exists"
+        test -f logic/risk_engine.py && echo "✅ logic/risk_engine.py exists"
+        test -f logic/evacuation_planner.py && echo "✅ logic/evacuation_planner.py exists"
+        test -f logic/alert_engine.py && echo "✅ logic/alert_engine.py exists"
+    
+    - name: Test risk score calculation
+      run: |
+        python -c "
+        from logic.risk_engine import compute_risk_score
+        score = compute_risk_score(300, 40, 60, 15, 10)
+        assert 0 <= score <= 100, f'Invalid score: {score}'
+        print(f'✅ Risk score calculation works: {score:.1f}')
+        "
+    
+    - name: Test confidence calculation
+      run: |
+        python -c "
+        from logic.risk_engine import calculate_confidence_level
+        conf, unc, exp = calculate_confidence_level(300, 40, 60, 15, 10)
+        assert conf in ['High', 'High-Medium', 'Medium', 'Medium-Low', 'Low']
+        print(f'✅ Confidence calculation works: {conf} (±{unc})')
+        "
+    
+    - name: Test alert level determination
+      run: |
+        python -c "
+        from logic.alert_engine import determine_alert_level
+        level = determine_alert_level(75)
+        assert level in ['Advisory', 'Warning', 'Evacuate', 'No Alert']
+        print(f'✅ Alert level determination works: {level}')
+        "
+    
+    - name: Test household priority calculation
+      run: |
+        python -c "
+        from logic.evacuation_planner import calculate_household_priority
+        priority = calculate_household_priority(50, 'Poor', 'Limited', 70)
+        assert 0 <= priority <= 100, f'Invalid priority: {priority}'
+        print(f'✅ Household priority calculation works: {priority:.1f}')
+        "
+    
+    - name: All checks passed
+      run: |
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "✅ All validation checks passed successfully!"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
